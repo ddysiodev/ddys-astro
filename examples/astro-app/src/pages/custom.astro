@@ -1,0 +1,9 @@
+---
+import DdysView from 'ddys-astro/components/DdysView';
+import DdysSearch from 'ddys-astro/components/DdysSearch';
+import 'ddys-astro/styles.css';
+---
+<main class="ddys-astro-shell">
+  <DdysView view="latest" params={{ limit: 8 }} title="Custom DDYS Latest" />
+  <DdysSearch />
+</main>

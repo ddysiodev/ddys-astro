@@ -1,0 +1,7 @@
+---
+import DdysShell from '../components/DdysShell.astro';
+import DdysView from '../components/DdysView.astro';
+---
+<DdysShell title="DDYS Shares">
+  <DdysView view="shares" params={Object.fromEntries(Astro.url.searchParams.entries())} title="Shares" />
+</DdysShell>

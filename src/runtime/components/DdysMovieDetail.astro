@@ -1,0 +1,41 @@
+---
+import { ddysAstroOptions } from 'virtual:ddys-astro/config';
+import type { DdysMovie } from 'ddys-astro/types';
+import { getDdysConfig } from '../server/config.mjs';
+import { createDdysServerClient } from '../server/client.mjs';
+import { createDdysMovieJsonLd, createDdysMovieSeo } from '../server/seo.mjs';
+import { movieDescription, moviePoster, movieTitle } from '../utils/display.mjs';
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const config = getDdysConfig(ddysAstroOptions);
+const client = createDdysServerClient(ddysAstroOptions);
+let movie: DdysMovie | null = null;
+let error = '';
+try {
+  movie = await client.movie(slug) as DdysMovie;
+} catch (cause) {
+  error = cause instanceof Error ? cause.message : 'DDYS movie request failed.';
+}
+const seo = movie ? createDdysMovieSeo(config, movie) : null;
+const jsonLd = movie ? createDdysMovieJsonLd(config, movie) : null;
+---
+{seo && <Fragment set:html={`<title>${seo.title}</title><meta name="description" content="${seo.description}"><link rel="canonical" href="${seo.canonical}">`} />}
+{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+<section class="ddys-astro-detail">
+  {error && <p class="ddys-astro-alert">{error}</p>}
+  {movie && (
+    <>
+      <img src={moviePoster(movie)} alt={movieTitle(movie)} />
+      <div>
+        <h1>{movieTitle(movie)}</h1>
+        <p>{[movie.year, movie.type, movie.genre, movie.region].filter(Boolean).join(' / ')}</p>
+        <p>{movieDescription(movie)}</p>
+        <a class="ddys-astro-button" href={`${config.astro.mountPath}/movie/${slug}/sources`}>Sources</a>
+      </div>
+    </>
+  )}
+</section>

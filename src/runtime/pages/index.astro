@@ -1,0 +1,8 @@
+---
+import DdysShell from '../components/DdysShell.astro';
+import DdysView from '../components/DdysView.astro';
+---
+<DdysShell title="DDYS">
+  <DdysView view="latest" params={{ limit: 12 }} title="Latest" />
+  <DdysView view="hot" params={{ limit: 12 }} title="Hot" />
+</DdysShell>

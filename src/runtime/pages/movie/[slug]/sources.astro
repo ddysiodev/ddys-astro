@@ -1,0 +1,9 @@
+---
+import DdysShell from '../../../components/DdysShell.astro';
+import DdysSources from '../../../components/DdysSources.astro';
+
+const slug = Astro.params.slug || '';
+---
+<DdysShell title="DDYS Sources">
+  <DdysSources slug={slug} />
+</DdysShell>

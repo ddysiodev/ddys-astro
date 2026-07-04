@@ -1,0 +1,9 @@
+---
+import DdysShell from '../../../components/DdysShell.astro';
+import DdysMovieDetail from '../../../components/DdysMovieDetail.astro';
+
+const slug = Astro.params.slug || '';
+---
+<DdysShell title="DDYS Movie">
+  <DdysMovieDetail slug={slug} />
+</DdysShell>

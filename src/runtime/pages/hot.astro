@@ -1,0 +1,7 @@
+---
+import DdysShell from '../components/DdysShell.astro';
+import DdysView from '../components/DdysView.astro';
+---
+<DdysShell title="DDYS Hot">
+  <DdysView view="hot" params={{ limit: Number(Astro.url.searchParams.get('limit') || 24) }} title="Hot" />
+</DdysShell>

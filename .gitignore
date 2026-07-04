@@ -1,0 +1,14 @@
+/dist/
+/node_modules/
+/.astro/
+/.vercel/
+/.netlify/
+/coverage/
+*.log
+*.tmp
+*.cache
+*.tgz
+pnpm-lock.yaml
+.env
+.env.*
+!.env.example

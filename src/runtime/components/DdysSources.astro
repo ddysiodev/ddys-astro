@@ -1,0 +1,39 @@
+---
+import { ddysAstroOptions } from 'virtual:ddys-astro/config';
+import type { DdysSource } from 'ddys-astro/types';
+import { createDdysServerClient } from '../server/client.mjs';
+import { listFromPayload, sourceLabel } from '../utils/display.mjs';
+import { isAllowedResourceUrl } from '../utils/security.mjs';
+import { getDdysConfig } from '../server/config.mjs';
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+const config = getDdysConfig(ddysAstroOptions);
+const client = createDdysServerClient(ddysAstroOptions);
+let sources: DdysSource[] = [];
+let error = '';
+try {
+  sources = listFromPayload<DdysSource>(await client.sources(slug));
+} catch (cause) {
+  error = cause instanceof Error ? cause.message : 'DDYS sources request failed.';
+}
+---
+<section class="ddys-astro-section">
+  <header class="ddys-astro-section-head">
+    <h1>Sources</h1>
+    <a href={`${config.astro.mountPath}/movie/${slug}`}>Back</a>
+  </header>
+  {error && <p class="ddys-astro-alert">{error}</p>}
+  <ul class="ddys-astro-sources">
+    {sources.map((source) => (
+      <li>
+        {isAllowedResourceUrl(source.url, config.security.allowedResourceProtocols)
+          ? <a href={String(source.url)} rel="nofollow noopener noreferrer">{sourceLabel(source)}</a>
+          : <span>{sourceLabel(source)}</span>}
+      </li>
+    ))}
+  </ul>
+</section>

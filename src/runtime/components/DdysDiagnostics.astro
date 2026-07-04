@@ -1,0 +1,18 @@
+---
+import { ddysAstroOptions } from 'virtual:ddys-astro/config';
+import { DDYS_ASTRO_VERSION, safeDdysConfig } from '../config.mjs';
+import { getDdysConfig } from '../server/config.mjs';
+
+const config = getDdysConfig(ddysAstroOptions);
+---
+<section class="ddys-astro-section">
+  <header class="ddys-astro-section-head">
+    <h1>Diagnostics</h1>
+    <span>{DDYS_ASTRO_VERSION}</span>
+  </header>
+  <pre class="ddys-astro-pre">{JSON.stringify({
+    enabled: config.diagnostics.enabled,
+    config: safeDdysConfig(config),
+    endpoints: [config.routePrefix + '/proxy', config.routePrefix + '/request', config.routePrefix + '/diagnostics', config.routePrefix + '/revalidate']
+  }, null, 2)}</pre>
+</section>

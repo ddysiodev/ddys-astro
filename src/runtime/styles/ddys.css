@@ -1,0 +1,166 @@
+:root {
+  --ddys-astro-text: #172033;
+  --ddys-astro-muted: #667085;
+  --ddys-astro-border: #d7dce5;
+  --ddys-astro-surface: #ffffff;
+  --ddys-astro-soft: #f3f6fb;
+  --ddys-astro-accent: #007a5a;
+  --ddys-astro-danger: #b42318;
+}
+
+.ddys-astro-shell {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 32px 18px;
+  color: var(--ddys-astro-text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.ddys-astro-nav,
+.ddys-astro-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.ddys-astro-nav {
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--ddys-astro-border);
+  padding-bottom: 14px;
+}
+
+.ddys-astro-nav a,
+.ddys-astro-section-head a,
+.ddys-astro-button {
+  color: var(--ddys-astro-accent);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.ddys-astro-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.ddys-astro-card {
+  border: 1px solid var(--ddys-astro-border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--ddys-astro-surface);
+}
+
+.ddys-astro-card-link {
+  color: inherit;
+  display: block;
+  text-decoration: none;
+}
+
+.ddys-astro-card img,
+.ddys-astro-detail img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  background: var(--ddys-astro-soft);
+}
+
+.ddys-astro-card-body {
+  display: grid;
+  gap: 6px;
+  padding: 12px;
+}
+
+.ddys-astro-card-body small,
+.ddys-astro-card-body span {
+  color: var(--ddys-astro-muted);
+  font-size: 0.9rem;
+}
+
+.ddys-astro-detail {
+  display: grid;
+  grid-template-columns: minmax(180px, 280px) 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.ddys-astro-search form,
+.ddys-astro-request-form {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.ddys-astro-search form {
+  grid-template-columns: 1fr auto;
+}
+
+.ddys-astro-request-form label {
+  display: grid;
+  gap: 5px;
+  font-weight: 650;
+}
+
+.ddys-astro-search input,
+.ddys-astro-request-form input,
+.ddys-astro-request-form textarea {
+  border: 1px solid var(--ddys-astro-border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font: inherit;
+}
+
+.ddys-astro-search button,
+.ddys-astro-request-form button {
+  border: 0;
+  border-radius: 6px;
+  padding: 10px 14px;
+  background: var(--ddys-astro-accent);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.ddys-astro-alert {
+  color: var(--ddys-astro-danger);
+  border: 1px solid color-mix(in srgb, var(--ddys-astro-danger) 30%, transparent);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.ddys-astro-pre {
+  overflow: auto;
+  border: 1px solid var(--ddys-astro-border);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--ddys-astro-soft);
+}
+
+.ddys-astro-sources {
+  display: grid;
+  gap: 10px;
+  padding-left: 20px;
+}
+
+.ddys-astro-honeypot {
+  position: absolute;
+  left: -10000px;
+}
+
+@media (max-width: 720px) {
+  .ddys-astro-detail,
+  .ddys-astro-search form {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ddys-astro-text: #ecf1f8;
+    --ddys-astro-muted: #aab4c4;
+    --ddys-astro-border: #344156;
+    --ddys-astro-surface: #121827;
+    --ddys-astro-soft: #1b2434;
+    --ddys-astro-accent: #56c2a0;
+  }
+}

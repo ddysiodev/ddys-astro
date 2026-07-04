@@ -1,0 +1,38 @@
+---
+import { ddysAstroOptions } from 'virtual:ddys-astro/config';
+import { getDdysConfig } from '../server/config.mjs';
+import '../styles/ddys.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const config = getDdysConfig(ddysAstroOptions);
+const { title = 'DDYS', description = 'DDYS movies and video resources.' } = Astro.props;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href={`${config.iconBasePath}/icon-32.png`} />
+    <link rel="manifest" href="/manifest.webmanifest" />
+  </head>
+  <body>
+    <main class="ddys-astro-shell">
+      <nav class="ddys-astro-nav" aria-label="DDYS">
+        <a href={config.astro.mountPath}>DDYS</a>
+        <a href={`${config.astro.mountPath}/latest`}>Latest</a>
+        <a href={`${config.astro.mountPath}/hot`}>Hot</a>
+        <a href={`${config.astro.mountPath}/movies`}>Movies</a>
+        <a href={`${config.astro.mountPath}/search`}>Search</a>
+        <a href={`${config.astro.mountPath}/calendar`}>Calendar</a>
+        <a href={`${config.astro.mountPath}/request`}>Request</a>
+      </nav>
+      <slot />
+    </main>
+  </body>
+</html>

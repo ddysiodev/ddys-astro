@@ -1,0 +1,15 @@
+---
+import { ddysAstroOptions } from 'virtual:ddys-astro/config';
+import { getDdysConfig } from '../server/config.mjs';
+import DdysView from './DdysView.astro';
+
+const config = getDdysConfig(ddysAstroOptions);
+const q = Astro.url.searchParams.get('q') || '';
+---
+<section class="ddys-astro-search">
+  <form action={`${config.astro.mountPath}/search`} method="get">
+    <input type="search" name="q" value={q} placeholder="Search DDYS" />
+    <button type="submit">Search</button>
+  </form>
+  {q && <DdysView view="search" params={{ q }} title={`Search: ${q}`} />}
+</section>

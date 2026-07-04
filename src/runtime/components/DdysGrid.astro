@@ -1,0 +1,14 @@
+---
+import type { DdysMovie } from 'ddys-astro/types';
+import DdysCard from './DdysCard.astro';
+
+interface Props {
+  items: DdysMovie[];
+  mountPath?: string;
+}
+
+const { items = [], mountPath = '/ddys' } = Astro.props;
+---
+<div class="ddys-astro-grid">
+  {items.length ? items.map((movie) => <DdysCard movie={movie} mountPath={mountPath} />) : <p class="ddys-astro-empty">No DDYS items found.</p>}
+</div>

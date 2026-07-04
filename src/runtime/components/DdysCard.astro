@@ -1,0 +1,22 @@
+---
+import type { DdysMovie } from 'ddys-astro/types';
+import { movieDescription, moviePoster, movieSlug, movieTitle } from '../utils/display.mjs';
+
+interface Props {
+  movie: DdysMovie;
+  mountPath?: string;
+}
+
+const { movie, mountPath = '/ddys' } = Astro.props;
+const slug = movieSlug(movie);
+---
+<article class="ddys-astro-card">
+  <a class="ddys-astro-card-link" href={slug ? `${mountPath}/movie/${slug}` : mountPath}>
+    <img src={moviePoster(movie)} alt={movieTitle(movie)} loading="lazy" />
+    <span class="ddys-astro-card-body">
+      <strong>{movieTitle(movie)}</strong>
+      <small>{[movie.year, movie.type, movie.region].filter(Boolean).join(' / ')}</small>
+      {movieDescription(movie) && <span>{movieDescription(movie)}</span>}
+    </span>
+  </a>
+</article>

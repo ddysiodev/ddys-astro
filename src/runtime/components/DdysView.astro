@@ -1,0 +1,46 @@
+---
+import { ddysAstroOptions } from 'virtual:ddys-astro/config';
+import type { DdysMovie } from 'ddys-astro/types';
+import { getDdysConfig } from '../server/config.mjs';
+import { createDdysServerClient } from '../server/client.mjs';
+import { listFromPayload } from '../utils/display.mjs';
+import DdysGrid from './DdysGrid.astro';
+
+interface Props {
+  view?: 'latest' | 'hot' | 'movies' | 'search' | 'calendar' | 'collections' | 'shares' | 'types' | 'genres' | 'regions';
+  params?: Record<string, unknown>;
+  title?: string;
+}
+
+const { view = 'latest', params = {}, title } = Astro.props;
+const config = getDdysConfig(ddysAstroOptions);
+const client = createDdysServerClient(ddysAstroOptions);
+let payload: unknown = [];
+let error = '';
+try {
+  if (view === 'hot') payload = await client.hot(params);
+  else if (view === 'movies') payload = await client.movies(params);
+  else if (view === 'search') payload = params.q ? await client.search(params) : [];
+  else if (view === 'calendar') payload = await client.calendar(params);
+  else if (view === 'collections') payload = await client.collections(params);
+  else if (view === 'shares') payload = await client.shares(params);
+  else if (view === 'types') payload = await client.types();
+  else if (view === 'genres') payload = await client.genres();
+  else if (view === 'regions') payload = await client.regions();
+  else payload = await client.latest(params);
+} catch (cause) {
+  error = cause instanceof Error ? cause.message : 'DDYS request failed.';
+}
+const items = listFromPayload<DdysMovie>(payload);
+const heading = title || view.charAt(0).toUpperCase() + view.slice(1);
+---
+<section class="ddys-astro-section" data-ddys-view={view}>
+  <header class="ddys-astro-section-head">
+    <h1>{heading}</h1>
+    <a href={config.astro.mountPath}>DDYS</a>
+  </header>
+  {error && <p class="ddys-astro-alert">{error}</p>}
+  {['types', 'genres', 'regions', 'calendar'].includes(view)
+    ? <pre class="ddys-astro-pre">{JSON.stringify(payload, null, 2)}</pre>
+    : <DdysGrid items={items} mountPath={config.astro.mountPath} />}
+</section>

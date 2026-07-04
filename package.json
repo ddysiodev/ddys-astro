@@ -1,0 +1,132 @@
+{
+  "name": "ddys-astro",
+  "version": "0.1.0",
+  "description": "Official Astro integration for the DDYS API with injected pages, endpoints, components, content loader, caching, SEO helpers, diagnostics, and request form.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://www.npmjs.com/package/ddys-astro",
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ddysiodev/ddys-astro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ddysiodev/ddys-astro/issues"
+  },
+  "keywords": [
+    "ddys",
+    "astro",
+    "astro-integration",
+    "content-loader",
+    "movies",
+    "video",
+    "api",
+    "seo",
+    "ssr"
+  ],
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./dist/index.mjs"
+    },
+    "./client": {
+      "types": "./src/runtime/client/index.ts",
+      "import": "./dist/runtime/client/index.mjs"
+    },
+    "./server": {
+      "types": "./src/runtime/server/index.ts",
+      "import": "./dist/runtime/server/index.mjs"
+    },
+    "./content": {
+      "types": "./src/runtime/content/index.ts",
+      "import": "./dist/runtime/content/index.mjs"
+    },
+    "./types": {
+      "types": "./src/runtime/types/ddys.ts",
+      "import": "./dist/runtime/types/ddys.mjs"
+    },
+    "./components/DdysShell": {
+      "types": "./src/runtime/components/DdysShell.astro.d.ts",
+      "import": "./dist/runtime/components/DdysShell.astro"
+    },
+    "./components/DdysCard": {
+      "types": "./src/runtime/components/DdysCard.astro.d.ts",
+      "import": "./dist/runtime/components/DdysCard.astro"
+    },
+    "./components/DdysGrid": {
+      "types": "./src/runtime/components/DdysGrid.astro.d.ts",
+      "import": "./dist/runtime/components/DdysGrid.astro"
+    },
+    "./components/DdysMovieDetail": {
+      "types": "./src/runtime/components/DdysMovieDetail.astro.d.ts",
+      "import": "./dist/runtime/components/DdysMovieDetail.astro"
+    },
+    "./components/DdysSources": {
+      "types": "./src/runtime/components/DdysSources.astro.d.ts",
+      "import": "./dist/runtime/components/DdysSources.astro"
+    },
+    "./components/DdysView": {
+      "types": "./src/runtime/components/DdysView.astro.d.ts",
+      "import": "./dist/runtime/components/DdysView.astro"
+    },
+    "./components/DdysSearch": {
+      "types": "./src/runtime/components/DdysSearch.astro.d.ts",
+      "import": "./dist/runtime/components/DdysSearch.astro"
+    },
+    "./components/DdysRequestForm": {
+      "types": "./src/runtime/components/DdysRequestForm.astro.d.ts",
+      "import": "./dist/runtime/components/DdysRequestForm.astro"
+    },
+    "./components/DdysDiagnostics": {
+      "types": "./src/runtime/components/DdysDiagnostics.astro.d.ts",
+      "import": "./dist/runtime/components/DdysDiagnostics.astro"
+    },
+    "./components/*": {
+      "types": "./src/runtime/components/*.astro.d.ts",
+      "import": "./dist/runtime/components/*.astro"
+    },
+    "./styles.css": "./dist/runtime/styles/ddys.css"
+  },
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./src/index.ts",
+  "files": [
+    "dist",
+    "src",
+    "components",
+    "examples",
+    "public",
+    "README.md",
+    "README.zh-CN.md",
+    "LICENSE",
+    ".env.example",
+    "astro.config.example.mjs"
+  ],
+  "sideEffects": [
+    "./dist/runtime/styles/ddys.css",
+    "./src/runtime/styles/ddys.css",
+    "./dist/runtime/components/*.astro",
+    "./src/runtime/components/*.astro"
+  ],
+  "peerDependencies": {
+    "astro": ">=5.0.0 <8.0.0"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.9",
+    "@types/node": "^22.10.0",
+    "astro": "^7.0.0",
+    "typescript": "^5.9.0"
+  },
+  "scripts": {
+    "build": "node tools/build-dist.mjs",
+    "check": "node tools/check.mjs",
+    "prepack": "node tools/build-dist.mjs",
+    "test": "node tools/check.mjs && node --test tests/*.test.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=18.18.0"
+  }
+}

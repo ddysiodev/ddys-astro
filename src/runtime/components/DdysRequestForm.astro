@@ -1,0 +1,41 @@
+---
+import { ddysAstroOptions } from 'virtual:ddys-astro/config';
+import { getDdysConfig } from '../server/config.mjs';
+
+const config = getDdysConfig(ddysAstroOptions);
+const endpoint = `${config.routePrefix}/request`;
+---
+<form class="ddys-astro-request-form" data-ddys-request-form data-endpoint={endpoint}>
+  <input type="hidden" name="token" value="" />
+  <input class="ddys-astro-honeypot" type="text" name={config.requestForm.honeypotField} tabindex="-1" autocomplete="off" />
+  <label>Title<input required maxlength="120" name="title" /></label>
+  <label>Year<input name="year" inputmode="numeric" maxlength="12" /></label>
+  <label>Type<input name="type" maxlength="40" /></label>
+  <label>Douban ID<input name="doubanId" maxlength="40" /></label>
+  <label>IMDb ID<input name="imdbId" maxlength="40" /></label>
+  <label>Note<textarea name="note" maxlength="1000"></textarea></label>
+  <label>Contact<input name="contact" maxlength="200" /></label>
+  <button type="submit" disabled={!config.requestForm.enabled}>Submit</button>
+  <p data-ddys-request-message>{config.requestForm.enabled ? '' : 'Request form is disabled.'}</p>
+</form>
+<script is:inline>
+  for (const form of document.querySelectorAll('[data-ddys-request-form]')) {
+    const endpoint = form.getAttribute('data-endpoint');
+    fetch(endpoint).then((response) => response.json()).then((data) => {
+      const token = form.querySelector('input[name="token"]');
+      if (token) token.value = data.token || '';
+    }).catch(() => {});
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const message = form.querySelector('[data-ddys-request-message]');
+      const payload = Object.fromEntries(new FormData(form).entries());
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (message) message.textContent = response.ok ? 'Request submitted.' : data.message || 'Request failed.';
+    });
+  }
+</script>
