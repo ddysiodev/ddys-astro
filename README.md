@@ -127,7 +127,7 @@ const latest = await client.latest({ limit: 12 });
 
 The client covers `movies`, `latest`, `hot`, `search`, `suggest`, `calendar`, `movie`, `sources`, `related`, `comments`, `collections`, `collection`, `shares`, `share`, `requests`, `activities`, `user`, `types`, `genres`, `regions`, `me`, `createRequest`, `createComment`, `deleteComment`, `reportInvalidResource`, `follow`, and `unfollow`.
 
-`Astro.locals.ddys` is available in middleware-aware routes:
+`Astro.locals.ddys` is available in server-rendered routes when the integration middleware is enabled. Its TypeScript declaration is injected only for `output: 'server'` with middleware on, so static projects and `middleware: false` projects do not get a false runtime guarantee.
 
 ```astro
 ---
@@ -184,7 +184,7 @@ node tools/check.mjs
 node --test tests/structure.test.mjs
 pnpm build
 pnpm pack --dry-run
-powershell -ExecutionPolicy Bypass -File tools/build-package.ps1 -Version 0.1.1
+powershell -ExecutionPolicy Bypass -File tools/build-package.ps1 -Version 0.1.2
 ```
 
-The source ZIP is generated at `dist/ddys-astro-v0.1.1.zip`.
+The source ZIP is generated at `dist/ddys-astro-v0.1.2.zip`.

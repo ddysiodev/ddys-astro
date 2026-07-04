@@ -175,7 +175,7 @@ async function checkPackage() {
 
 async function checkIntegration() {
   const text = await read('src/integration.ts');
-  for (const fragment of ['AstroIntegration', 'astro:config:setup', 'astro:config:done', 'config.output', 'serverOutput', 'needsServerOutput', 'injectRoute', 'injectScript', 'addMiddleware', 'createCodegenDir', 'injectTypes', 'virtual:ddys-astro/config', '/sitemap.xml', '/manifest.webmanifest', 'runtime/pages/movie/[slug]/sources.astro']) {
+  for (const fragment of ['AstroIntegration', 'astro:config:setup', 'astro:config:done', 'config.output', 'serverOutput', 'middlewareEnabled', 'config.output === \'server\'', 'needsServerOutput', 'injectRoute', 'injectScript', 'addMiddleware', 'createCodegenDir', 'injectTypes', 'virtual:ddys-astro/config', '/sitemap.xml', '/manifest.webmanifest', 'runtime/pages/movie/[slug]/sources.astro']) {
     assert(text.includes(fragment), `integration missing ${fragment}.`);
   }
   assert(text.includes('runtime pages and API endpoints are disabled') && text.includes('Static builds keep components'), 'integration must guard static output and explain server-only features.');
@@ -269,6 +269,7 @@ async function checkDocs() {
   for (const fragment of ['ddys-astro', 'astro:config:setup', 'output: \'server\'', 'Astro.locals.ddys', 'DdysProxyClient', 'Content Loader', 'DdysRequestForm', 'createDdysContentLoader', '/api/ddys/proxy', 'DDYS_API_KEY']) {
     assert(en.includes(fragment) && zh.includes(fragment), `READMEs missing ${fragment}.`);
   }
+  assert(en.includes('middleware is enabled') && zh.includes('middleware 已启用'), 'READMEs must document middleware-gated locals types.');
   assert(en.includes('Static Astro projects') && zh.includes('静态 Astro 项目'), 'READMEs must document static output behavior.');
 }
 

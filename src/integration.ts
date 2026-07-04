@@ -92,17 +92,20 @@ export function ddysAstro(options: DdysAstroOptions = {}): AstroIntegration {
           : 'DDYS Astro integration loaded in static mode; runtime pages and API endpoints are disabled.'
         );
       },
-      'astro:config:done': ({ buildOutput, injectTypes, logger }) => {
-        injectTypes({
-          filename: 'types/ddys-astro.d.ts',
-          content: [
-            'declare namespace App {',
-            '  interface Locals {',
-            "    ddys: import('ddys-astro/client').DdysClient;",
-            '  }',
-            '}'
-          ].join('\n')
-        });
+      'astro:config:done': ({ buildOutput, config, injectTypes, logger }) => {
+        const middlewareEnabled = runtimeOptions.astro?.middleware !== false;
+        if (config.output === 'server' && middlewareEnabled) {
+          injectTypes({
+            filename: 'types/ddys-astro.d.ts',
+            content: [
+              'declare namespace App {',
+              '  interface Locals {',
+              "    ddys: import('ddys-astro/client').DdysClient;",
+              '  }',
+              '}'
+            ].join('\n')
+          });
+        }
         if (buildOutput === 'static' && needsServerOutput(runtimeOptions)) {
           logger.warn('DDYS auto pages, API endpoints, sitemap, request form, and Astro.locals middleware require output: "server". Static builds keep components, content loader, styles, icons, robots, and manifest.');
         }

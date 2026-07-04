@@ -127,7 +127,7 @@ const latest = await client.latest({ limit: 12 });
 
 Client 覆盖 `movies`、`latest`、`hot`、`search`、`suggest`、`calendar`、`movie`、`sources`、`related`、`comments`、`collections`、`collection`、`shares`、`share`、`requests`、`activities`、`user`、`types`、`genres`、`regions`、`me`、`createRequest`、`createComment`、`deleteComment`、`reportInvalidResource`、`follow`、`unfollow`。
 
-在支持 middleware 的路由里可以直接使用 `Astro.locals.ddys`：
+在 server 渲染且 middleware 已启用的路由里可以直接使用 `Astro.locals.ddys`。它的 TypeScript 声明只会在 `output: 'server'` 且 middleware 开启时注入，所以静态项目和 `middleware: false` 项目不会得到错误的运行时保证。
 
 ```astro
 ---
@@ -184,7 +184,7 @@ node tools/check.mjs
 node --test tests/structure.test.mjs
 pnpm build
 pnpm pack --dry-run
-powershell -ExecutionPolicy Bypass -File tools/build-package.ps1 -Version 0.1.1
+powershell -ExecutionPolicy Bypass -File tools/build-package.ps1 -Version 0.1.2
 ```
 
-源码 ZIP 会生成到 `dist/ddys-astro-v0.1.1.zip`。
+源码 ZIP 会生成到 `dist/ddys-astro-v0.1.2.zip`。

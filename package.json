@@ -1,6 +1,6 @@
 {
   "name": "ddys-astro",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Official Astro integration for the DDYS API with injected pages, endpoints, components, content loader, caching, SEO helpers, diagnostics, and request form.",
   "type": "module",
   "license": "MIT",
