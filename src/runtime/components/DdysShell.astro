@@ -6,10 +6,21 @@ import '../styles/ddys.css';
 interface Props {
   title?: string;
   description?: string;
+  canonical?: string;
+  image?: string;
+  type?: string;
+  jsonLd?: Record<string, unknown> | null;
 }
 
 const config = getDdysConfig(ddysAstroOptions);
-const { title = 'DDYS', description = 'DDYS movies and video resources.' } = Astro.props;
+const {
+  title = 'DDYS',
+  description = 'DDYS movies and video resources.',
+  canonical = new URL(config.astro.mountPath, config.siteBaseUrl).toString(),
+  image = new URL(`${config.iconBasePath}/logo.png`, config.siteBaseUrl).toString(),
+  type = 'website',
+  jsonLd = null
+} = Astro.props;
 ---
 <!doctype html>
 <html lang="en">
@@ -18,8 +29,20 @@ const { title = 'DDYS', description = 'DDYS movies and video resources.' } = Ast
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={image} />
+    <meta property="og:type" content={type} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
     <link rel="icon" href={`${config.iconBasePath}/icon-32.png`} />
     <link rel="manifest" href="/manifest.webmanifest" />
+    <slot name="head" />
+    {jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
   </head>
   <body>
     <main class="ddys-astro-shell">

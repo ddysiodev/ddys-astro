@@ -20,9 +20,10 @@ export function ddysAstro(options: DdysAstroOptions = {}): AstroIntegration {
   return {
     name: 'ddys-astro',
     hooks: {
-      'astro:config:setup': async ({ addMiddleware, createCodegenDir, injectRoute, injectScript, updateConfig, logger }) => {
+      'astro:config:setup': async ({ addMiddleware, config, createCodegenDir, injectRoute, injectScript, updateConfig, logger }) => {
         const codegenDir = createCodegenDir();
         const configFile = new URL('ddys-astro-config.mjs', codegenDir);
+        const serverOutput = config.output === 'server';
         await fs.mkdir(fileURLToPath(codegenDir), { recursive: true });
         await fs.writeFile(configFile, `export const ddysAstroOptions = ${JSON.stringify(runtimeOptions, null, 2)};\n`, 'utf8');
 
@@ -36,15 +37,15 @@ export function ddysAstro(options: DdysAstroOptions = {}): AstroIntegration {
           }
         });
 
-        const route = (pattern: string, file: string) => injectRoute({
+        const route = (pattern: string, file: string, prerender = false) => injectRoute({
           pattern,
           entrypoint: entrypoint(file),
-          prerender: false
+          prerender
         });
 
-        route(`${runtimeOptions.iconBasePath}/[...path]`, 'runtime/endpoints/assets.mjs');
+        route(`${runtimeOptions.iconBasePath}/[...path]`, 'runtime/endpoints/assets.mjs', true);
 
-        if (runtimeOptions.astro?.endpoints !== false) {
+        if (serverOutput && runtimeOptions.astro?.endpoints !== false) {
           route(`${runtimeOptions.routePrefix}/proxy`, 'runtime/endpoints/proxy.mjs');
           route(`${runtimeOptions.routePrefix}/request`, 'runtime/endpoints/request.mjs');
           route(`${runtimeOptions.routePrefix}/diagnostics`, 'runtime/endpoints/diagnostics.mjs');
@@ -52,12 +53,12 @@ export function ddysAstro(options: DdysAstroOptions = {}): AstroIntegration {
         }
 
         if (runtimeOptions.astro?.seoRoutes !== false) {
-          route('/sitemap.xml', 'runtime/endpoints/sitemap.mjs');
-          route('/robots.txt', 'runtime/endpoints/robots.mjs');
-          route('/manifest.webmanifest', 'runtime/endpoints/manifest.mjs');
+          if (serverOutput) route('/sitemap.xml', 'runtime/endpoints/sitemap.mjs');
+          route('/robots.txt', 'runtime/endpoints/robots.mjs', true);
+          route('/manifest.webmanifest', 'runtime/endpoints/manifest.mjs', true);
         }
 
-        if (runtimeOptions.astro?.pages !== false) {
+        if (serverOutput && runtimeOptions.astro?.pages !== false) {
           route(runtimeOptions.astro?.mountPath || '/ddys', 'runtime/pages/index.astro');
           route(`${runtimeOptions.astro?.mountPath}/latest`, 'runtime/pages/latest.astro');
           route(`${runtimeOptions.astro?.mountPath}/hot`, 'runtime/pages/hot.astro');
@@ -79,14 +80,32 @@ export function ddysAstro(options: DdysAstroOptions = {}): AstroIntegration {
           injectScript('page', "import 'ddys-astro/styles.css';");
         }
 
-        if (runtimeOptions.astro?.middleware !== false) {
+        if (serverOutput && runtimeOptions.astro?.middleware !== false) {
           addMiddleware({
             order: 'pre',
             entrypoint: entrypoint('runtime/middleware.mjs')
           });
         }
 
-        logger.info(`DDYS Astro integration mounted at ${runtimeOptions.astro?.mountPath} with API ${runtimeOptions.routePrefix}.`);
+        logger.info(serverOutput
+          ? `DDYS Astro integration mounted at ${runtimeOptions.astro?.mountPath} with API ${runtimeOptions.routePrefix}.`
+          : 'DDYS Astro integration loaded in static mode; runtime pages and API endpoints are disabled.'
+        );
+      },
+      'astro:config:done': ({ buildOutput, injectTypes, logger }) => {
+        injectTypes({
+          filename: 'types/ddys-astro.d.ts',
+          content: [
+            'declare namespace App {',
+            '  interface Locals {',
+            "    ddys: import('ddys-astro/client').DdysClient;",
+            '  }',
+            '}'
+          ].join('\n')
+        });
+        if (buildOutput === 'static' && needsServerOutput(runtimeOptions)) {
+          logger.warn('DDYS auto pages, API endpoints, sitemap, request form, and Astro.locals middleware require output: "server". Static builds keep components, content loader, styles, icons, robots, and manifest.');
+        }
       }
     }
   };
@@ -117,4 +136,11 @@ function normalizeIntegrationOptions(options: DdysAstroOptions): DdysConfigInput
 
 function entrypoint(file: string) {
   return fileURLToPath(new URL(file, import.meta.url));
+}
+
+function needsServerOutput(options: DdysConfigInput) {
+  return options.astro?.pages !== false
+    || options.astro?.endpoints !== false
+    || options.astro?.middleware !== false
+    || options.astro?.seoRoutes !== false;
 }

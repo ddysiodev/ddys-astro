@@ -3,28 +3,25 @@ import { ddysAstroOptions } from 'virtual:ddys-astro/config';
 import type { DdysMovie } from 'ddys-astro/types';
 import { getDdysConfig } from '../server/config.mjs';
 import { createDdysServerClient } from '../server/client.mjs';
-import { createDdysMovieJsonLd, createDdysMovieSeo } from '../server/seo.mjs';
 import { movieDescription, moviePoster, movieTitle } from '../utils/display.mjs';
 
 interface Props {
   slug: string;
+  movie?: DdysMovie | null;
+  error?: string;
 }
 
-const { slug } = Astro.props;
+const { slug, movie: initialMovie = null, error: initialError = '' } = Astro.props;
 const config = getDdysConfig(ddysAstroOptions);
 const client = createDdysServerClient(ddysAstroOptions);
-let movie: DdysMovie | null = null;
-let error = '';
-try {
+let movie: DdysMovie | null = initialMovie;
+let error = initialError;
+if (!movie && !error) try {
   movie = await client.movie(slug) as DdysMovie;
 } catch (cause) {
   error = cause instanceof Error ? cause.message : 'DDYS movie request failed.';
 }
-const seo = movie ? createDdysMovieSeo(config, movie) : null;
-const jsonLd = movie ? createDdysMovieJsonLd(config, movie) : null;
 ---
-{seo && <Fragment set:html={`<title>${seo.title}</title><meta name="description" content="${seo.description}"><link rel="canonical" href="${seo.canonical}">`} />}
-{jsonLd && <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
 <section class="ddys-astro-detail">
   {error && <p class="ddys-astro-alert">{error}</p>}
   {movie && (

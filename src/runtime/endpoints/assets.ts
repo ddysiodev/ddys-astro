@@ -1,9 +1,13 @@
 import type { APIContext } from 'astro';
 import { promises as fs } from 'node:fs';
 
-export const prerender = false;
+export const prerender = true;
 
 const allowed = new Set(['icon-16.png', 'icon-32.png', 'icon-192.png', 'icon-512.png', 'logo.png']);
+
+export function getStaticPaths() {
+  return Array.from(allowed, (path) => ({ params: { path } }));
+}
 
 export async function GET(context: APIContext) {
   const name = String(context.params.path || '').split('/').pop() || '';

@@ -1,6 +1,6 @@
 {
   "name": "ddys-astro",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Official Astro integration for the DDYS API with injected pages, endpoints, components, content loader, caching, SEO helpers, diagnostics, and request form.",
   "type": "module",
   "license": "MIT",
@@ -28,72 +28,77 @@
   ],
   "exports": {
     ".": {
-      "types": "./src/index.ts",
+      "types": "./index.d.ts",
       "import": "./dist/index.mjs"
     },
     "./client": {
-      "types": "./src/runtime/client/index.ts",
+      "types": "./client.d.ts",
       "import": "./dist/runtime/client/index.mjs"
     },
     "./server": {
-      "types": "./src/runtime/server/index.ts",
+      "types": "./server.d.ts",
       "import": "./dist/runtime/server/index.mjs"
     },
     "./content": {
-      "types": "./src/runtime/content/index.ts",
+      "types": "./content.d.ts",
       "import": "./dist/runtime/content/index.mjs"
     },
     "./types": {
-      "types": "./src/runtime/types/ddys.ts",
+      "types": "./types.d.ts",
       "import": "./dist/runtime/types/ddys.mjs"
     },
     "./components/DdysShell": {
-      "types": "./src/runtime/components/DdysShell.astro.d.ts",
+      "types": "./components/DdysShell.d.ts",
       "import": "./dist/runtime/components/DdysShell.astro"
     },
     "./components/DdysCard": {
-      "types": "./src/runtime/components/DdysCard.astro.d.ts",
+      "types": "./components/DdysCard.d.ts",
       "import": "./dist/runtime/components/DdysCard.astro"
     },
     "./components/DdysGrid": {
-      "types": "./src/runtime/components/DdysGrid.astro.d.ts",
+      "types": "./components/DdysGrid.d.ts",
       "import": "./dist/runtime/components/DdysGrid.astro"
     },
     "./components/DdysMovieDetail": {
-      "types": "./src/runtime/components/DdysMovieDetail.astro.d.ts",
+      "types": "./components/DdysMovieDetail.d.ts",
       "import": "./dist/runtime/components/DdysMovieDetail.astro"
     },
     "./components/DdysSources": {
-      "types": "./src/runtime/components/DdysSources.astro.d.ts",
+      "types": "./components/DdysSources.d.ts",
       "import": "./dist/runtime/components/DdysSources.astro"
     },
     "./components/DdysView": {
-      "types": "./src/runtime/components/DdysView.astro.d.ts",
+      "types": "./components/DdysView.d.ts",
       "import": "./dist/runtime/components/DdysView.astro"
     },
     "./components/DdysSearch": {
-      "types": "./src/runtime/components/DdysSearch.astro.d.ts",
+      "types": "./components/DdysSearch.d.ts",
       "import": "./dist/runtime/components/DdysSearch.astro"
     },
     "./components/DdysRequestForm": {
-      "types": "./src/runtime/components/DdysRequestForm.astro.d.ts",
+      "types": "./components/DdysRequestForm.d.ts",
       "import": "./dist/runtime/components/DdysRequestForm.astro"
     },
     "./components/DdysDiagnostics": {
-      "types": "./src/runtime/components/DdysDiagnostics.astro.d.ts",
+      "types": "./components/DdysDiagnostics.d.ts",
       "import": "./dist/runtime/components/DdysDiagnostics.astro"
     },
     "./components/*": {
-      "types": "./src/runtime/components/*.astro.d.ts",
+      "types": "./components/*.d.ts",
       "import": "./dist/runtime/components/*.astro"
     },
     "./styles.css": "./dist/runtime/styles/ddys.css"
   },
   "main": "./dist/index.mjs",
   "module": "./dist/index.mjs",
-  "types": "./src/index.ts",
+  "types": "./index.d.ts",
   "files": [
     "dist",
+    "index.d.ts",
+    "client.d.ts",
+    "server.d.ts",
+    "content.d.ts",
+    "types.d.ts",
     "src",
     "components",
     "examples",

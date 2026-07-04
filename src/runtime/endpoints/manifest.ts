@@ -3,7 +3,7 @@ import { endpointConfig } from '../server/config';
 import { createDdysManifest } from '../server/seo';
 import { json } from '../server/response';
 
-export const prerender = false;
+export const prerender = true;
 
 export function GET() {
   return json(createDdysManifest(endpointConfig(ddysAstroOptions)), 200, {

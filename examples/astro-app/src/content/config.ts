@@ -3,7 +3,7 @@ import { createDdysContentLoader } from 'ddys-astro/content';
 
 export const collections = {
   ddys: defineCollection({
-    loader: createDdysContentLoader({ view: 'latest', limit: 24 }),
+    loader: createDdysContentLoader({ view: 'latest', limit: 24, params: { type: 'movie' } }),
     schema: z.object({
       title: z.string().optional(),
       slug: z.string().optional(),

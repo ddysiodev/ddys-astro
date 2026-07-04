@@ -28,7 +28,9 @@ export default defineConfig({
 });
 ```
 
-`output: 'server'` is recommended when using injected DDYS endpoints and request forms.
+`output: 'server'` is required for injected DDYS pages, API endpoints, sitemap, request forms, and `Astro.locals.ddys` middleware.
+
+Static Astro projects can still use the components, content loader, styles, packaged icons, `robots.txt`, and `manifest.webmanifest`. Runtime DDYS pages and API routes are skipped automatically in static builds so the integration does not force a server adapter.
 
 ## Environment
 
@@ -50,7 +52,9 @@ Keep `DDYS_API_KEY`, `DDYS_FORM_SECRET`, and `DDYS_REVALIDATE_TOKEN` server-only
 - Injects pages under `/ddys` by default.
 - Injects API endpoints under `/api/ddys` by default.
 - Registers `Astro.locals.ddys` through middleware.
+- Injects `Astro.locals.ddys` TypeScript declarations during `astro:config:done`.
 - Serves icons copied from the DDYS public icon set at `/ddys-astro/images`.
+- Keeps static Astro builds adapter-free by only prerendering static-safe assets, robots, and manifest routes.
 - Ships a content loader for Astro Content Collections.
 - Ships SEO helpers for metadata, sitemap, robots, manifest, and Movie JSON-LD.
 
@@ -123,6 +127,25 @@ const latest = await client.latest({ limit: 12 });
 
 The client covers `movies`, `latest`, `hot`, `search`, `suggest`, `calendar`, `movie`, `sources`, `related`, `comments`, `collections`, `collection`, `shares`, `share`, `requests`, `activities`, `user`, `types`, `genres`, `regions`, `me`, `createRequest`, `createComment`, `deleteComment`, `reportInvalidResource`, `follow`, and `unfollow`.
 
+`Astro.locals.ddys` is available in middleware-aware routes:
+
+```astro
+---
+const latest = await Astro.locals.ddys.latest({ limit: 12 });
+---
+```
+
+## Browser Proxy Client
+
+```ts
+import { DdysProxyClient } from 'ddys-astro/client';
+
+const ddys = new DdysProxyClient('/api/ddys');
+const hot = await ddys.hot({ limit: 12 });
+```
+
+The proxy client calls the injected Astro API endpoints, so DDYS secrets stay server-side.
+
 ## Content Loader
 
 ```ts
@@ -132,7 +155,7 @@ import { createDdysContentLoader } from 'ddys-astro/content';
 
 export const collections = {
   ddys: defineCollection({
-    loader: createDdysContentLoader({ view: 'latest', limit: 50 }),
+    loader: createDdysContentLoader({ view: 'latest', limit: 50, params: { type: 'movie' } }),
     schema: z.object({
       title: z.string().optional(),
       slug: z.string().optional()
@@ -161,7 +184,7 @@ node tools/check.mjs
 node --test tests/structure.test.mjs
 pnpm build
 pnpm pack --dry-run
-powershell -ExecutionPolicy Bypass -File tools/build-package.ps1 -Version 0.1.0
+powershell -ExecutionPolicy Bypass -File tools/build-package.ps1 -Version 0.1.1
 ```
 
-The source ZIP is generated at `dist/ddys-astro-v0.1.0.zip`.
+The source ZIP is generated at `dist/ddys-astro-v0.1.1.zip`.

@@ -1,9 +1,30 @@
 ---
 import DdysShell from '../../../components/DdysShell.astro';
 import DdysMovieDetail from '../../../components/DdysMovieDetail.astro';
+import { ddysAstroOptions } from 'virtual:ddys-astro/config';
+import type { DdysMovie } from 'ddys-astro/types';
+import { createDdysServerClient } from '../../../server/client.mjs';
+import { getDdysConfig } from '../../../server/config.mjs';
+import { createDdysMovieJsonLd, createDdysMovieSeo } from '../../../server/seo.mjs';
 
 const slug = Astro.params.slug || '';
+const config = getDdysConfig(ddysAstroOptions);
+const client = createDdysServerClient(ddysAstroOptions);
+let movie: DdysMovie | null = null;
+let error = '';
+try {
+  movie = await client.movie(slug) as DdysMovie;
+} catch (cause) {
+  error = cause instanceof Error ? cause.message : 'DDYS movie request failed.';
+}
+const seo = movie ? createDdysMovieSeo(config, movie) : {
+  title: 'DDYS Movie',
+  description: error || 'DDYS movie detail.',
+  canonical: new URL(`${config.astro.mountPath}/movie/${slug}`, config.siteBaseUrl).toString(),
+  openGraph: { image: new URL(`${config.iconBasePath}/logo.png`, config.siteBaseUrl).toString(), type: 'video.movie' }
+};
+const jsonLd = movie ? createDdysMovieJsonLd(config, movie) : null;
 ---
-<DdysShell title="DDYS Movie">
-  <DdysMovieDetail slug={slug} />
+<DdysShell title={seo.title} description={seo.description} canonical={seo.canonical} image={seo.openGraph.image} type={seo.openGraph.type} jsonLd={jsonLd}>
+  <DdysMovieDetail slug={slug} movie={movie} error={error} />
 </DdysShell>

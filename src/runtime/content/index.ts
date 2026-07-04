@@ -1,12 +1,13 @@
 import type { DdysClient } from '../client/client';
 import type { DdysConfigInput } from '../config';
-import type { DdysMovie } from '../types/ddys';
+import type { DdysMovie, DdysQuery } from '../types/ddys';
 import { listFromPayload, movieSlug } from '../utils/display';
 import { createDdysServerClient } from '../server/client';
 
 export interface DdysContentLoaderOptions extends DdysConfigInput {
-  view?: 'latest' | 'hot' | 'movies';
+  view?: 'latest' | 'hot' | 'movies' | 'search';
   limit?: number;
+  params?: DdysQuery;
 }
 
 interface AstroContentStore<T> {
@@ -41,7 +42,9 @@ export async function createDdysStaticPaths(options: DdysContentLoaderOptions = 
 async function loadMovies(client: DdysClient, options: DdysContentLoaderOptions) {
   const limit = options.limit || 50;
   const view = options.view || 'latest';
-  if (view === 'hot') return listFromPayload<DdysMovie>(await client.hot({ limit }));
-  if (view === 'movies') return listFromPayload<DdysMovie>(await client.movies({ per_page: limit }));
-  return listFromPayload<DdysMovie>(await client.latest({ limit }));
+  const params = { ...(options.params || {}) };
+  if (view === 'hot') return listFromPayload<DdysMovie>(await client.hot({ ...params, limit }));
+  if (view === 'movies') return listFromPayload<DdysMovie>(await client.movies({ ...params, per_page: limit }));
+  if (view === 'search') return listFromPayload<DdysMovie>(params.q ? await client.search({ ...params, per_page: limit }) : []);
+  return listFromPayload<DdysMovie>(await client.latest({ ...params, limit }));
 }

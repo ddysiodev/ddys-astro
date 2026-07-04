@@ -1,4 +1,5 @@
 export { DdysClient, type DdysFetch, type DdysRequestOptions } from './client';
+export { DdysProxyClient, type DdysProxyFetch } from './proxy-client';
 export { DdysError } from './error';
 export {
   DDYS_ASTRO_VERSION,

@@ -1,11 +1,5 @@
-import type { DdysClient } from '../client/client';
-
-declare global {
-  namespace App {
-    interface Locals {
-      ddys: DdysClient;
-    }
+declare namespace App {
+  interface Locals {
+    ddys: import('ddys-astro/client').DdysClient;
   }
 }
-
-export {};

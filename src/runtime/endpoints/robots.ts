@@ -2,7 +2,7 @@ import { ddysAstroOptions } from 'virtual:ddys-astro/config';
 import { endpointConfig } from '../server/config';
 import { createDdysRobotsText } from '../server/seo';
 
-export const prerender = false;
+export const prerender = true;
 
 export function GET() {
   return new Response(createDdysRobotsText(endpointConfig(ddysAstroOptions)), {
